@@ -45,9 +45,9 @@ along with MRST.  If not, see <http://www.gnu.org/licenses/>.
 
 
    G = processgrid_mex(varargin{:});
-   not_egde = checkConformalEdges(G);
+   not_edge = checkConformalEdges(G);
    if(numel(not_edge)>0)
-       disp('Num cells not edge conformal',num2str(numel(not_edge)))
+       disp(['Num cells not edge conformal',num2str(numel(not_edge))])
 
    end
    G.griddim = 3;

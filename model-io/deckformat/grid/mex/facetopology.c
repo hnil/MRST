@@ -77,7 +77,7 @@ computeFaceTopology(const int *a1, const int *a2,
     if (a2[0] > b2[0]){ mask[4] = a2[0]; } else { mask[4] = b2[0]; }
     if (a1[0] > b1[0]){ mask[6] = a1[0]; } else { mask[6] = b1[0]; }
 
-#if DEBUG
+//#if DEBUG
     /* Illegal situations */
     if (mask [0] == mask[2] ||
         mask [0] == mask[4] ||
@@ -85,7 +85,7 @@ computeFaceTopology(const int *a1, const int *a2,
         mask [4] == mask[6]){
         fprintf(stderr, "Illegal Partial pinch!\n");
     }
-#endif
+//#endif
 
 
     /* Partial pinch of face */
@@ -138,13 +138,68 @@ computeFaceTopology(const int *a1, const int *a2,
         }
     }
     f = faces;
-    for (k=7; k>=0; --k){
+    /*for (k=7; k>=0; --k){
         if(mask[k] != -1){
             *f++ = mask[k];
         }
-    }
+      }*/
+    // upper left
+    k=0;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        // intersection top top
+    k=1;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        // upper right
+    k=2;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        // intersection bottom-top or top bottum
+    k=3;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        // add possible hanging nodes
+        if((mask[2] != -1) && (mask[4] != -1)){
+            assert(mask[3] == -1);
+            if((mask[2]-mask[4])> 1){
+                for(zn = mask[2]+1; zn>=mask[4]; --zn){
+                    *f++ = zn;
+                }
+            }
+        }
+        // lower right
+    k=4;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+    k=5;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+    k=6;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        if((mask[6] != -1) && (mask[0] != -1)){
+            assert(mask[7] == -1);
+            if((mask[0]-mask[6])> 1){
+                for(zn = mask[6]+1; zn<=mask[0]; ++zn){
+                    *f++ = zn;
+                }
+            }
+        }
+    k=7;
+        if(mask[k] != -1){
+            *f++ = mask[k];
+        }
+        //}
 
-#if DEBUG>1
+//#if DEBUG>1
     /* Check for repeated nodes:*/
     int i;
     fprintf(stderr, "face: ");
@@ -157,7 +212,7 @@ computeFaceTopology(const int *a1, const int *a2,
         }
     }
     fprintf(stderr, "\n");
-#endif
+//#endif
 
 
     return f;

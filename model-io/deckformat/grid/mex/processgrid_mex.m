@@ -55,10 +55,10 @@ along with MRST.  If not, see <http://www.gnu.org/licenses/>.
              '-Wmissing-declarations', '-Winline', '-Wundef', ...
              '-Wnested-externs', '-Wcast-qual', '-Wshadow', ...
              '-Wconversion', '-Wwrite-strings', '-Wno-conversion', ...
-             '-Wchar-subscripts', '-Wredundant-decls"'};
+             '-Wchar-subscripts','-fpermissive', '-Wredundant-decls"'};
 
    SRC = {'processgrid.c', 'preprocess.c', 'uniquepoints.c', ...
-          'facetopology.c', 'mxgrdecl.c'};
+          'facetopology.c', 'mxgrdecl.c','make_edge_conformal.cpp'};
 
    INCLUDE = {};
 
@@ -70,4 +70,3 @@ along with MRST.  If not, see <http://www.gnu.org/licenses/>.
    % Call MEX edition.
    [varargout{1:nargout}] = processgrid_mex(varargin{:});
 end
-

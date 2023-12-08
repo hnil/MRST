@@ -45,7 +45,7 @@
 
 #include "preprocess.h"
 #include "mxgrdecl.h"
-
+#include "make_edge_conformal.hpp"
 
 /* ---------------------------------------------------------------------- */
 static mxArray *
@@ -438,7 +438,7 @@ mexFunction(int nlhs,       mxArray *plhs[],
         tolerance = define_tolerance(nrhs, prhs);
 
         process_grdecl(&grdecl, tolerance, &g);
-
+        make_edge_conformal(&grdecl);
         plhs[0] = allocate_grid(&g, mexFunctionName());
 
         if (plhs[0] != NULL) {

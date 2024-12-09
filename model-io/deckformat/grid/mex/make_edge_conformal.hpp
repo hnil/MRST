@@ -3,6 +3,6 @@
 
 #include "preprocess.h"
 extern "C" {
-    void make_edge_conformal(struct grdecl* grdecl);
+    void make_edge_conformal(struct processed_grid* grdecl);
 }
 #endif

@@ -42,7 +42,10 @@
 #include <string.h>
 
 #include <mex.h>
-
+#include <exception>
+#include <stdexcept>
+#include <iostream>
+#include <string>
 #include "preprocess.h"
 #include "mxgrdecl.h"
 #include "make_edge_conformal.hpp"
@@ -272,18 +275,18 @@ add_cells(struct processed_grid *grid)
     pi1[0] = 0;
     //allocate p2 NBNB
     for (f = 0; f < nf; f++) {
-        cf_tag = 2*grid->face_tag[f] + 1;             /* [1, 3, 5] */
+        cf_tag = 2*grid->face_tag[f];             /* [1, 3, 5] */
         c1     = grid->face_neighbors[2*f + 0];
         c2     = grid->face_neighbors[2*f + 1];
 
         if (c1 >= 0) {
-            pi2[ pi1[ c1 + 1 ] + 0*nhf ] = f + 1;
+            pi2[ pi1[ c1 + 1 ] + 0*nhf ] = f;
             pi2[ pi1[ c1 + 1 ] + 1*nhf ] = cf_tag + 1;  /* out */
 
             pi1[ c1 + 1 ] += 1;
         }
         if (c2 >= 0) {
-            pi2[ pi1[ c2 + 1 ] + 0*nhf ] = f + 1;
+            pi2[ pi1[ c2 + 1 ] + 0*nhf ] = f;
             pi2[ pi1[ c2 + 1 ] + 1*nhf ] = cf_tag + 0;  /* in */
 
             pi1[ c2 + 1 ] += 1;
@@ -497,9 +500,21 @@ mexFunction(int nlhs,       mxArray *plhs[],
     if (args_ok(nlhs, nrhs, prhs)) {
         mx_init_grdecl(&grdecl, prhs[0]);
         tolerance = define_tolerance(nrhs, prhs);
-
-        process_grdecl(&grdecl, tolerance, &g);
-        make_edge_conformal(&grdecl);
+	try{
+	    
+	    
+	    if(tolerance < 0){
+		process_grdecl(&grdecl, 0.0, &g);
+		add_cells(&g);
+		make_edge_conformal(&g);
+	    }else{
+		process_grdecl(&grdecl, tolerance, &g);
+	    }
+	}
+	catch(const std::exception &exc){
+	    std::cout << exc.what();
+	    mexErrMsgTxt("Something wrong"); 
+	}
         plhs[0] = allocate_grid(&g, mexFunctionName());
 
         if (plhs[0] != NULL) {
